@@ -1,30 +1,25 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
 import { Building2, User, Mail, CheckCircle2, Save } from "lucide-react";
 import { PortalShell } from "@/components/portal/PortalShell";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { Reveal } from "@/components/motion/Reveal";
-import { usePortalAuth } from "@/lib/portal/auth";
+import { usePortalAuth, useRequireClient } from "@/lib/portal/auth";
 
 const inputClasses =
   "w-full rounded-xl border border-ink/10 bg-white/70 py-3 pl-10 pr-4 text-sm text-ink placeholder:text-ink-soft focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20";
 
 /** View and edit the signed-in client's own account details. */
 export default function PortalProfilePage() {
-  const { client, loading, updateProfile } = usePortalAuth();
-  const router = useRouter();
+  const { updateProfile } = usePortalAuth();
+  const { client, loading } = useRequireClient();
 
   const [companyName, setCompanyName] = useState("");
   const [contactName, setContactName] = useState("");
   const [email, setEmail] = useState("");
   const [saved, setSaved] = useState(false);
-
-  useEffect(() => {
-    if (!loading && !client) router.replace("/portal");
-  }, [loading, client, router]);
 
   // Self-contained (not referencing a memoized callback) so the setState
   // call is textually inside this effect, matching the pattern that

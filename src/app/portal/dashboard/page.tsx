@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { TrendingUp, Layers, CalendarClock, ArrowUpRight } from "lucide-react";
 import { PortalShell } from "@/components/portal/PortalShell";
@@ -9,7 +7,7 @@ import { ProjectCard } from "@/components/portal/ProjectCard";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/Reveal";
-import { usePortalAuth } from "@/lib/portal/auth";
+import { useRequireClient } from "@/lib/portal/auth";
 import { getAllProjectsForClient } from "@/lib/portal/project-requests";
 
 /** How many project cards the dashboard previews before pointing to the full Projects page. */
@@ -26,12 +24,7 @@ function formatDate(iso: string): string {
  * highlight-level summary rather than repeating that detail.
  */
 export default function PortalDashboardPage() {
-  const { client, loading } = usePortalAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!loading && !client) router.replace("/portal");
-  }, [loading, client, router]);
+  const { client, loading } = useRequireClient();
 
   if (loading || !client) return null;
 

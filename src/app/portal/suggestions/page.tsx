@@ -1,14 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { MessageSquarePlus, RefreshCw, AtSign } from "lucide-react";
 import { PortalShell } from "@/components/portal/PortalShell";
 import { MentionComposer } from "@/components/portal/MentionComposer";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { Reveal } from "@/components/motion/Reveal";
-import { usePortalAuth } from "@/lib/portal/auth";
+import { useRequireClient } from "@/lib/portal/auth";
 import { getAllProjectsForClient } from "@/lib/portal/project-requests";
 import { getTasksForProject } from "@/lib/portal/project-details";
 import { getAllClientMessages } from "@/lib/portal/client-messages";
@@ -25,8 +24,7 @@ function formatDate(iso: string): string {
  * it was tagged to.
  */
 export default function PortalSuggestionsPage() {
-  const { client, loading } = usePortalAuth();
-  const router = useRouter();
+  const { client, loading } = useRequireClient();
   const [messages, setMessages] = useState<ClientMessage[]>([]);
 
   const projects = client ? getAllProjectsForClient(client.id) : [];
@@ -38,10 +36,6 @@ export default function PortalSuggestionsPage() {
     }
     setMessages(getAllClientMessages(client.id));
   }, [client]);
-
-  useEffect(() => {
-    if (!loading && !client) router.replace("/portal");
-  }, [loading, client, router]);
 
   // Self-contained (not referencing refreshMessages) so the setState call
   // is textually inside this effect, matching the pattern that satisfies

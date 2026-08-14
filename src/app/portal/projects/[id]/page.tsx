@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle2, Circle, FileText, CalendarClock, ClipboardList } from "lucide-react";
 import { PortalShell } from "@/components/portal/PortalShell";
@@ -10,7 +10,7 @@ import { ActivityFeed } from "@/components/portal/ActivityFeed";
 import { MessageComposer } from "@/components/portal/MessageComposer";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/Reveal";
-import { usePortalAuth } from "@/lib/portal/auth";
+import { useRequireClient } from "@/lib/portal/auth";
 import { getTasksForProject, getDeliverablesForProject, getUpdatesForProject } from "@/lib/portal/project-details";
 import { getAnyProjectById } from "@/lib/portal/project-requests";
 import { getClientMessages } from "@/lib/portal/client-messages";
@@ -27,8 +27,7 @@ function dueLabel(iso: string | null): string {
 }
 
 export default function PortalProjectPage() {
-  const { client, loading } = usePortalAuth();
-  const router = useRouter();
+  const { client, loading } = useRequireClient();
   const params = useParams<{ id: string }>();
 
   const project = client ? getAnyProjectById(client.id, params.id) ?? null : null;
@@ -45,10 +44,6 @@ export default function PortalProjectPage() {
     }
     setMessages(getClientMessages(client.id, project.id));
   }, [client, project]);
-
-  useEffect(() => {
-    if (!loading && !client) router.replace("/portal");
-  }, [loading, client, router]);
 
   // Self-contained (not referencing refreshMessages) so the setState call
   // is textually inside this effect, matching the pattern that satisfies

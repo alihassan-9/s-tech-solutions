@@ -1,22 +1,15 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { PortalShell } from "@/components/portal/PortalShell";
 import { ProjectCard } from "@/components/portal/ProjectCard";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/Reveal";
-import { usePortalAuth } from "@/lib/portal/auth";
+import { useRequireClient } from "@/lib/portal/auth";
 import { getAllProjectsForClient } from "@/lib/portal/project-requests";
 
 /** The full project listing — the dashboard only shows a short highlights preview. */
 export default function PortalProjectsPage() {
-  const { client, loading } = usePortalAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!loading && !client) router.replace("/portal");
-  }, [loading, client, router]);
+  const { client, loading } = useRequireClient();
 
   if (loading || !client) return null;
 

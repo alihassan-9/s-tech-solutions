@@ -1,12 +1,51 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import type { PortalClient } from "@/lib/portal/types";
 
 // Renamed from the old stech-portal-demo-* keys so any account left over
 // from the seeded demo build is dropped rather than resurrected.
 const CLIENTS_KEY = "stech-portal-clients";
 const SESSION_KEY = "stech-portal-session";
+
+/**
+ * Where this tab is in a sign-out, which is what tells a protected page
+ * whether to send someone to the login form or all the way out to the public
+ * site. Two stages, because those are two different moments:
+ *
+ * - "leaving": sign out was just clicked and its redirect hasn't landed yet.
+ *   That redirect should go to the login form, as it always has.
+ * - "settled": the visitor is out and looking at the login form. Any portal
+ *   page reached from here came from browser history, so it should hand them
+ *   back to the public site instead of the login form.
+ *
+ * sessionStorage rather than localStorage: this is about one tab's history,
+ * and it should not follow the visitor into a new tab. Plain storage rather
+ * than React state on purpose: writing it must not re-render anything, or
+ * flipping to "settled" as the login page mounts could re-fire the guard on
+ * the page being left and bounce the visitor somewhere else mid-transition.
+ */
+const SIGNED_OUT_KEY = "stech-portal-signed-out";
+
+function readSignOutStage(): "leaving" | "settled" | null {
+  const raw = window.sessionStorage.getItem(SIGNED_OUT_KEY);
+  return raw === "leaving" || raw === "settled" ? raw : null;
+}
+
+/**
+ * Called by the login page once the post-sign-out redirect has landed. From
+ * that point on, a protected page means the visitor pressed Back.
+ */
+export function settleSignOut(): void {
+  if (readSignOutStage() !== "leaving") return;
+  window.sessionStorage.setItem(SIGNED_OUT_KEY, "settled");
+}
+
+/** Where someone without a session belongs: see useRequireClient() below. */
+function exitTarget(): string {
+  return readSignOutStage() === "settled" ? "/" : "/portal";
+}
 
 export type SignupInput = {
   companyName: string;
@@ -70,6 +109,28 @@ export function PortalAuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     };
     sync();
+
+    // Pressing Back can restore a whole portal page from the back/forward
+    // cache, JavaScript state and all, which means a page rendered while
+    // signed in comes back looking signed in: the provider is never
+    // remounted, so nothing notices the session is gone. `pageshow` with
+    // persisted set is the one signal for that restore, and re-reading
+    // storage there drops the stale client so the page's guard can act.
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) sync();
+    };
+    // Same staleness through a different door: signing out in one tab should
+    // not leave another tab holding a live-looking session.
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === SESSION_KEY || event.key === CLIENTS_KEY) sync();
+    };
+
+    window.addEventListener("pageshow", onPageShow);
+    window.addEventListener("storage", onStorage);
+    return () => {
+      window.removeEventListener("pageshow", onPageShow);
+      window.removeEventListener("storage", onStorage);
+    };
   }, []);
 
   const login: PortalAuthContextValue["login"] = async (email, password) => {
@@ -87,6 +148,7 @@ export function PortalAuthProvider({ children }: { children: ReactNode }) {
       return { error: "No account found for that email on this device. Create one to get started." };
     }
     window.localStorage.setItem(SESSION_KEY, existing.id);
+    window.sessionStorage.removeItem(SIGNED_OUT_KEY);
     setClient(existing);
     return { error: null };
   };
@@ -113,6 +175,7 @@ export function PortalAuthProvider({ children }: { children: ReactNode }) {
     };
     writeClients([...clients, newClient]);
     window.localStorage.setItem(SESSION_KEY, newClient.id);
+    window.sessionStorage.removeItem(SIGNED_OUT_KEY);
     setClient(newClient);
     return { error: null };
   };
@@ -126,11 +189,14 @@ export function PortalAuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     window.localStorage.removeItem(SESSION_KEY);
+    window.sessionStorage.setItem(SIGNED_OUT_KEY, "leaving");
     setClient(null);
   };
 
   return (
-    <PortalAuthContext.Provider value={{ client, loading, login, signup, updateProfile, logout }}>
+    <PortalAuthContext.Provider
+      value={{ client, loading, login, signup, updateProfile, logout }}
+    >
       {children}
     </PortalAuthContext.Provider>
   );
@@ -140,4 +206,48 @@ export function usePortalAuth() {
   const ctx = useContext(PortalAuthContext);
   if (!ctx) throw new Error("usePortalAuth must be used within PortalAuthProvider");
   return ctx;
+}
+
+/**
+ * Guard for every page behind the portal. Call it at the top of the page;
+ * it returns the same client/loading pair usePortalAuth() would.
+ *
+ * Where it sends someone without a session is the whole point:
+ *
+ * - Never signed out here (a cold link straight to /portal/dashboard, say):
+ *   the login form, which is what they need.
+ * - Signed out in this tab: the public site, not the login form. Browser
+ *   history still holds every portal page visited before signing out, and
+ *   JavaScript cannot delete those entries. Sending each one to the login
+ *   form meant Back walked the visitor through the whole stack, bouncing off
+ *   a login screen at each step and never reaching the site. Landing them on
+ *   "/" instead means one Back press leaves the portal, and any further
+ *   presses keep them on the public site rather than crawling backwards.
+ */
+export function useRequireClient() {
+  const { client, loading } = usePortalAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (loading || client) return;
+    router.replace(exitTarget());
+  }, [client, loading, router]);
+
+  // The back/forward cache needs its own exit, and a different kind of one.
+  // A restored page brings back a router instance whose history state no
+  // longer matches the tab: its replace() tears the page down to nothing but
+  // never changes the URL, which is exactly the "blank portal page you can
+  // keep pressing Back through" this guard exists to prevent. A real
+  // navigation is the only reliable way out of a restored document.
+  useEffect(() => {
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+      if (window.localStorage.getItem(SESSION_KEY)) return;
+      window.location.replace(exitTarget());
+    };
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
+
+  return { client, loading };
 }

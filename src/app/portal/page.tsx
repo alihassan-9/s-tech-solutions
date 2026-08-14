@@ -21,7 +21,7 @@ import { Logo } from "@/components/layout/Logo";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { Cloud } from "@/components/sky/Cloud";
 import { Reveal } from "@/components/motion/Reveal";
-import { usePortalAuth } from "@/lib/portal/auth";
+import { settleSignOut, usePortalAuth } from "@/lib/portal/auth";
 
 const inputClasses =
   "w-full rounded-xl border border-ink/10 bg-white/70 py-3 pl-10 pr-4 text-sm text-ink placeholder:text-ink-soft focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20";
@@ -90,6 +90,13 @@ export default function PortalLoginPage() {
   useEffect(() => {
     if (!loading && client) router.replace("/portal/dashboard");
   }, [loading, client, router]);
+
+  // Reaching this page ends a sign-out: from here, any portal page the
+  // visitor lands on came from browser history, so the guard should hand
+  // them back to the public site rather than bounce them here again.
+  useEffect(() => {
+    settleSignOut();
+  }, []);
 
   const isSignUp = mode === "sign-up";
   const slide = twoUp && isSignUp;

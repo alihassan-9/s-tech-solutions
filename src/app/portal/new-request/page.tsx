@@ -1,22 +1,15 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { PortalShell } from "@/components/portal/PortalShell";
 import { NewProjectForm } from "@/components/portal/NewProjectForm";
 import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { Reveal } from "@/components/motion/Reveal";
-import { usePortalAuth } from "@/lib/portal/auth";
+import { useRequireClient } from "@/lib/portal/auth";
 
 export default function NewProjectRequestPage() {
-  const { client, loading } = usePortalAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!loading && !client) router.replace("/portal");
-  }, [loading, client, router]);
+  const { client, loading } = useRequireClient();
 
   if (loading || !client) return null;
 
