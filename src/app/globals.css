@@ -144,6 +144,14 @@ html {
   /* Matches the top of the sky so overscroll never flashes white. */
   background-color: var(--color-sky-2);
   -webkit-tap-highlight-color: transparent;
+
+  /* Scroll-reveals that enter from the side (Reveal direction="left" /
+     "right") sit 40px off their final position until they animate in, and
+     an off-screen one below the fold widened the page enough to drag it
+     sideways on a phone. `clip`, not `hidden`: hidden would turn the root
+     into a scroll container and break the portal sidebar's position:sticky
+     along with Lenis's scroll handling. */
+  overflow-x: clip;
 }
 
 body {

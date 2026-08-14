@@ -68,18 +68,24 @@ export function Navbar() {
           initial={{ y: -80, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          className={`mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-4 rounded-full transition-all duration-500 ${
+          className={`mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-full transition-all duration-500 lg:grid lg:grid-cols-[1fr_auto_1fr] ${
             condensed
               ? "border border-white/70 bg-white/75 px-4 py-2.5 shadow-float backdrop-blur-xl sm:px-5"
               : "border border-transparent px-2 py-3 sm:px-3"
           }`}
         >
-          {/* grid-cols-[1fr_auto_1fr]: the two flanking columns share the
+          {/* lg:grid-cols-[1fr_auto_1fr]: the two flanking columns share the
               remaining space equally regardless of how wide their content
               is, so the nav in the middle column sits at the bar's true
-              geometric center — justify-between previously just spaced
-              three unequal-width groups, pulling the nav toward whichever
-              side had less content. */}
+              geometric center. justify-between alone just spaced three
+              unequal-width groups, pulling the nav toward whichever side had
+              less content.
+
+              It is gated to lg because a 1fr track cannot shrink below its
+              content's min-content width: below lg the equal tracks each grew
+              to the wider side's width and pushed the bar past the viewport,
+              which is what let the whole page drag sideways on a phone. Below
+              lg the centre nav is hidden anyway, so plain flex is right. */}
           {/* flex, not the default inline anchor: an inline <a> wrapping the
               inline-flex Logo builds a line box around it, and because the
               logo tile carries no text baseline of its own the strut leaves

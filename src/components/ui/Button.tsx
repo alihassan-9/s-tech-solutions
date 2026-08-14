@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { Magnetic } from "@/components/motion/Magnetic";
+import { cn } from "@/lib/utils";
 
 type Variant = "primary" | "secondary" | "invert" | "outline-invert";
 type Size = "md" | "lg";
@@ -56,7 +57,12 @@ export function Button(props: AsLink | AsButton) {
 
   const base =
     "group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full font-medium whitespace-nowrap transition-colors duration-200";
-  const classes = `${base} ${SIZE[size]} ${VARIANT[variant]} ${className}`;
+  // cn(), not string concatenation: a caller passing `hidden sm:inline-flex`
+  // used to end up with both `hidden` and the base's `inline-flex` in the
+  // class list, and Tailwind's source order handed the win to `inline-flex`.
+  // The navbar CTA stayed visible on phones because of it, widening the bar
+  // past the viewport. twMerge drops the losing display utility instead.
+  const classes = cn(base, SIZE[size], VARIANT[variant], className);
 
   const inner = (
     <>
