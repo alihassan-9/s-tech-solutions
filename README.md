@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# S-Tech Solutions
 
-## Getting Started
+Marketing site and client portal for S-Tech Solutions, a Bahawalpur-based
+business services company working in lead generation, data research and
+verification, CRM management, and email marketing support.
 
-First, run the development server:
+Built with Next.js 16 (App Router), React 19, Tailwind CSS v4, Motion, and
+Lenis for smooth scrolling.
+
+## Running it
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The site runs at http://localhost:3000, the portal at `/portal`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+No environment variables are needed. `.env.local.example` lists the Supabase
+keys the portal will use once it is connected to the CRM; nothing reads them
+today.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Layout
 
-## Learn More
+```
+src/app/page.tsx        the whole marketing page, section by section
+src/app/portal/         portal routes: sign-in, dashboard, projects, requests
+src/components/         marketing, portal, motion, and sky//glass primitives
+src/lib/portal/         portal data access
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Portal data
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The portal has no backend yet. Accounts and projects are written to the
+visitor's own `localStorage`, and the sign-in screen says so plainly. There is
+no seeded sample data: a new account starts empty and fills up from its own
+submitted requests.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Three modules are the seam where real queries land, and the pages reading them
+should not need to change:
 
-## Deploy on Vercel
+- `src/lib/portal/auth.tsx` swaps for Supabase auth
+- `src/lib/portal/project-requests.ts` and `project-details.ts` swap for
+  project queries
+- `src/lib/portal/client-messages.ts` swaps for the messages table
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`src/lib/supabase/client.ts` holds the browser client, unused so far. Every
+table it will touch needs row-level security restricting each client to their
+own rows before it goes near real data.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploying
+
+Pushing to `master` deploys to production on Vercel.
