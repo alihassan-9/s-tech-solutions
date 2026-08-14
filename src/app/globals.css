@@ -1,26 +1,405 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
+  /* ================================================================
+     S-Tech "Clear Skies" design system
+     The whole product sits inside one continuous sky: bright at
+     altitude, hazing toward the horizon. Ink is deep navy rather
+     than black so type stays legible against blue without fighting it.
+     ================================================================ */
+
+  /* Type is deep *blue*, never near-black — the palette has no dark neutrals. */
+  --color-ink: #0f2f63;
+  --color-ink-muted: #4a6693;
+  --color-ink-soft: #5f7ba8;
+
+  /* The atmosphere itself, top of the page down to the horizon. */
+  --color-sky-1: #6fb4ff;
+  --color-sky-2: #9dcdff;
+  --color-sky-3: #cae3ff;
+  --color-sky-4: #e8f3ff;
+  --color-sky-5: #f6faff;
+
+  /* Brand blue, carried over from the existing S-Tech identity. */
+  --color-brand: #1f62f0;
+  --color-brand-hover: #1a52d4;
+  --color-brand-deep: #1445c4;
+  --color-brand-light: #6aa4ff;
+  --color-brand-soft: #eaf2ff;
+  --color-brand-soft-2: #d6e6ff;
+
+  /* Deepest surface on the site. Still an unmistakably blue blue — the
+     contrast bands are saturated, not dark. */
+  --color-deep: #1a52d4;
+  --color-deep-2: #2f74ff;
+
+  /* Text on the saturated blue panels. Muted has to stay genuinely light —
+     it only clears 4.5:1 against these blues around this value — while still
+     sitting a clear step below white headings. */
+  --color-invert: #ffffff;
+  --color-invert-muted: #dce9ff;
+
+  /* Glass + hairlines. Cards float on the sky, so borders stay faint. */
+  --color-glass: rgba(255, 255, 255, 0.62);
+  --color-glass-strong: rgba(255, 255, 255, 0.86);
+  --color-hairline: rgba(10, 40, 90, 0.09);
+  --color-hairline-strong: rgba(10, 40, 90, 0.16);
+  --color-hairline-invert: rgba(255, 255, 255, 0.14);
+
+  /* Shadows are blue-tinted rather than grey, so nothing muddies the sky. */
+  --shadow-float: 0 24px 60px -32px rgba(23, 68, 150, 0.4);
+  --shadow-lift: 0 32px 80px -36px rgba(23, 68, 150, 0.5);
+  --shadow-brand: 0 24px 60px -24px rgba(31, 98, 240, 0.55);
+
+  /* shadcn/base-ui tokens (kept so generated primitives keep working) */
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0f2f63;
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --radius: 0.625rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  --color-ink: var(--color-ink);
+  --color-ink-muted: var(--color-ink-muted);
+  --color-ink-soft: var(--color-ink-soft);
+
+  --color-sky-1: var(--color-sky-1);
+  --color-sky-2: var(--color-sky-2);
+  --color-sky-3: var(--color-sky-3);
+  --color-sky-4: var(--color-sky-4);
+  --color-sky-5: var(--color-sky-5);
+
+  --color-brand: var(--color-brand);
+  --color-brand-hover: var(--color-brand-hover);
+  --color-brand-deep: var(--color-brand-deep);
+  --color-brand-light: var(--color-brand-light);
+  --color-brand-soft: var(--color-brand-soft);
+  --color-brand-soft-2: var(--color-brand-soft-2);
+
+  --color-deep: var(--color-deep);
+  --color-deep-2: var(--color-deep-2);
+
+  --color-invert: var(--color-invert);
+  --color-invert-muted: var(--color-invert-muted);
+
+  --color-glass: var(--color-glass);
+  --color-glass-strong: var(--color-glass-strong);
+  --color-hairline: var(--color-hairline);
+  --color-hairline-strong: var(--color-hairline-strong);
+  --color-hairline-invert: var(--color-hairline-invert);
+
+  --shadow-float: var(--shadow-float);
+  --shadow-lift: var(--shadow-lift);
+  --shadow-brand: var(--shadow-brand);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-accent: var(--font-accent-serif);
+
+  --color-destructive: var(--destructive);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 3.2);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ==================================================================
+   Base
+   ================================================================== */
+
+html {
+  /* No scroll-behavior: smooth here — Lenis (SmoothScroll.tsx) owns all
+     scroll animation via JS. Having both fight over the same scroll
+     position on every anchor click is exactly what produced the
+     stuck-then-jump stutter: the browser's native smooth-scroll and
+     Lenis's frame-by-frame animation were racing each other. */
+  /* Matches the top of the sky so overscroll never flashes white. */
+  background-color: var(--color-sky-2);
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  color: var(--color-ink);
+  /* The sky is painted by <SkyBackground>, so the body itself is clear. */
+  background-color: transparent;
+}
+
+::selection {
+  background-color: var(--color-brand);
+  color: #ffffff;
+}
+
+/* Custom scrollbar — a brand-blue pill floating in a transparent track,
+   rather than the browser default, on both engines that support styling it. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-brand-light) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-brand-light);
+  background-clip: padding-box;
+  border: 3px solid transparent;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-brand);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+
+/* ==================================================================
+   Custom cursor
+   The native cursor is only hidden on precise pointers, and never on
+   text fields where the caret is load-bearing.
+   ================================================================== */
+
+@media (pointer: fine) {
+  html.custom-cursor,
+  html.custom-cursor body,
+  html.custom-cursor a,
+  html.custom-cursor button,
+  html.custom-cursor [role="button"],
+  html.custom-cursor summary {
+    cursor: none;
+  }
+}
+
+.cursor-ring,
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  border-radius: 9999px;
+  will-change: transform;
+}
+
+/* ==================================================================
+   Utilities
+   ================================================================== */
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Frosted panel used for cards floating directly on the sky. */
+  .glass {
+    background-color: var(--color-glass);
+    backdrop-filter: blur(20px) saturate(1.6);
+    -webkit-backdrop-filter: blur(20px) saturate(1.6);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    box-shadow: var(--shadow-float);
+  }
+
+  .glass-strong {
+    background-color: var(--color-glass-strong);
+    backdrop-filter: blur(24px) saturate(1.7);
+    -webkit-backdrop-filter: blur(24px) saturate(1.7);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: var(--shadow-float);
+  }
+
+  /* Brand dot-grid texture, echoing the S-Tech print mark. */
+  .bg-dot-grid {
+    background-image: radial-gradient(currentColor 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+
+  /* Fine film grain — keeps large gradient fields from banding. */
+  .bg-grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.32;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+
+  /* Cursor-tracked highlight. --mx/--my are written by GlassCard. */
+  .spotlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(31, 98, 240, 0.1),
+      transparent 65%
+    );
+  }
+
+  .spotlight:hover::before {
+    opacity: 1;
+  }
+
+  .spotlight-invert::before {
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(255, 255, 255, 0.14),
+      transparent 65%
+    );
+  }
+
+  /* Link that draws its underline from left to right on hover. */
+  .link-sweep {
+    position: relative;
+  }
+
+  .link-sweep::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    height: 1px;
+    width: 100%;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .link-sweep:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+/* ==================================================================
+   Keyframes
+   ================================================================== */
+
+/* Slow lateral drift for the background cloud layers. */
+@keyframes cloud-drift {
+  from {
+    transform: translate3d(-12%, 0, 0);
+  }
+  to {
+    transform: translate3d(12%, 0, 0);
+  }
+}
+
+@keyframes marquee-x {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee {
+  animation: marquee-x var(--marquee-duration, 40s) linear infinite;
+}
+
+.marquee-group:hover .animate-marquee {
+  animation-play-state: paused;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes tab-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tab-panel-enter {
+  animation: tab-panel-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Scroll-reveal fallback for the no-JS case (see layout.tsx <noscript>). */
+.reveal-fallback {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .tab-panel-enter {
+    animation: none !important;
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--color-hairline);
+    outline-color: color-mix(in oklab, var(--color-brand) 50%, transparent);
+  }
+
+  html {
+    font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
 }
