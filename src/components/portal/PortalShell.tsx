@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import Link from "next/link";
+import { Menu, X, Bell } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { Logo } from "@/components/layout/Logo";
 import { Sidebar } from "@/components/portal/Sidebar";
+import { useUnreadNotifications } from "@/components/portal/useUnreadNotifications";
 import type { ReactNode } from "react";
 
 const SIDEBAR_WIDTH = "w-[280px]";
@@ -17,6 +19,7 @@ const SIDEBAR_WIDTH = "w-[280px]";
  */
 export function PortalShell({ children }: { children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const unread = useUnreadNotifications();
 
   return (
     <div className="flex min-h-screen">
@@ -32,15 +35,31 @@ export function PortalShell({ children }: { children: ReactNode }) {
       {/* Mobile top bar */}
       <div className="fixed inset-x-0 top-0 z-40 flex items-center justify-between border-b border-white/60 bg-white/70 px-5 py-3.5 backdrop-blur-xl lg:hidden">
         <Logo />
-        <button
-          type="button"
-          onClick={() => setMobileOpen(true)}
-          aria-label="Open menu"
-          data-cursor="link"
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-white/70 bg-white/70 text-ink"
-        >
-          <Menu className="h-4.5 w-4.5" strokeWidth={1.75} />
-        </button>
+        {/* The sidebar carries the unread badge, and on phones the sidebar is
+            behind a tap. The bell keeps notifications one tap away and shows
+            the same unread state without opening the drawer first. */}
+        <div className="flex items-center gap-2">
+          <Link
+            href="/portal/notifications"
+            aria-label={unread > 0 ? `Notifications, ${unread} unread` : "Notifications"}
+            data-cursor="link"
+            className="relative flex h-9 w-9 items-center justify-center rounded-full border border-white/70 bg-white/70 text-ink"
+          >
+            <Bell className="h-4.5 w-4.5" strokeWidth={1.75} />
+            {unread > 0 ? (
+              <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-brand ring-2 ring-white" />
+            ) : null}
+          </Link>
+          <button
+            type="button"
+            onClick={() => setMobileOpen(true)}
+            aria-label="Open menu"
+            data-cursor="link"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/70 bg-white/70 text-ink"
+          >
+            <Menu className="h-4.5 w-4.5" strokeWidth={1.75} />
+          </button>
+        </div>
       </div>
 
       {/* Mobile sidebar drawer */}

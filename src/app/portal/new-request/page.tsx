@@ -34,8 +34,9 @@ export default function NewProjectRequestPage() {
             Tell us what you need
           </h1>
           <p className="mt-3 max-w-xl text-sm leading-6 text-ink-muted">
-            The more specific this is, the faster we can scope it accurately. This creates a
-            project on your dashboard right away, and our team follows up to confirm details.
+            The more specific this is, the faster we can scope it accurately. Submitting
+            creates a project on your dashboard and sends the brief straight to our inbox,
+            so our team can follow up to confirm the details.
           </p>
         </Reveal>
 

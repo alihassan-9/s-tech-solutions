@@ -27,7 +27,7 @@ export default function PortalProfilePage() {
   useEffect(() => {
     const sync = () => {
       if (!client) return;
-      setCompanyName(client.companyName);
+      setCompanyName(client.companyName ?? "");
       setContactName(client.contactName);
       setEmail(client.email);
     };
@@ -38,7 +38,13 @@ export default function PortalProfilePage() {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    updateProfile({ companyName: companyName.trim(), contactName: contactName.trim(), email: email.trim() });
+    updateProfile({
+      // Cleared back to undefined rather than "", so a client who removes
+      // their company reads the same as one who never gave it.
+      companyName: companyName.trim() || undefined,
+      contactName: contactName.trim(),
+      email: email.trim(),
+    });
     setSaved(true);
     window.setTimeout(() => setSaved(false), 2200);
   };
@@ -62,7 +68,7 @@ export default function PortalProfilePage() {
             <form onSubmit={onSubmit} className="space-y-4">
               <div>
                 <label className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-soft">
-                  Company name
+                  Company name <span className="normal-case tracking-normal">(optional)</span>
                 </label>
                 <div className="relative mt-2">
                   <Building2
@@ -70,7 +76,7 @@ export default function PortalProfilePage() {
                     strokeWidth={1.75}
                   />
                   <input
-                    required
+                    placeholder="Leave blank if you are working solo"
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
                     className={inputClasses}

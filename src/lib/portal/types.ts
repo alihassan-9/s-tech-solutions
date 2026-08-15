@@ -9,9 +9,20 @@ export type ProjectStatus = "not_started" | "in_progress" | "in_review" | "compl
 
 export interface PortalClient {
   id: string;
-  companyName: string;
+  /**
+   * Optional: plenty of clients are solo founders, freelancers, or people
+   * enquiring before a company exists, so nothing in the portal blocks on
+   * having one. Treat an empty string and undefined the same way, and fall
+   * back to the contact name wherever a client needs a display label.
+   */
+  companyName?: string;
   contactName: string;
   email: string;
+}
+
+/** The label to show for a client: their company if they gave one, else their name. */
+export function clientDisplayName(client: PortalClient): string {
+  return client.companyName?.trim() || client.contactName;
 }
 
 export interface PortalTask {
@@ -77,6 +88,39 @@ export interface NewProjectRequestInput {
   format: string;
   notes: string;
   desiredDueDate: string;
+}
+
+/**
+ * Who a request came from. Inside the portal this is filled in from the
+ * signed-in client; on the public form the visitor types it, since there is
+ * no account to read it from. Company name is optional in both.
+ */
+export interface ProjectRequestContact {
+  contactName: string;
+  email: string;
+  companyName?: string;
+}
+
+export type NotificationTopic = "project_updates" | "messages" | "reminders";
+
+/**
+ * One item in the portal's notification centre. Raised on the client's own
+ * device today (see notifications.ts); a real backend would insert these as
+ * rows and deliver them through Web Push so they arrive with the portal
+ * closed too.
+ */
+export interface PortalNotification {
+  id: string;
+  clientId: string;
+  topic: NotificationTopic;
+  title: string;
+  body: string;
+  /** Portal route this notification is about, if any. */
+  href?: string;
+  /** Set when a notification must only ever be raised once. */
+  dedupeKey?: string;
+  createdAt: string;
+  read: boolean;
 }
 
 export type ClientMessageType = "suggestion" | "update_request";

@@ -7,13 +7,17 @@ import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/
 import { useLenis } from "lenis/react";
 import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/layout/Logo";
+import { CONTACT_EMAIL, START_PROJECT_PATH } from "@/lib/site";
 
+// Rooted at "/" rather than bare fragments: this bar now sits on pages that
+// are not the landing page (the project form, the legal pages), where a bare
+// "#services" would look for a section that is not in the document.
 const NAV_LINKS = [
-  { href: "#services", label: "Services", id: "services" },
-  { href: "#markets", label: "Markets", id: "markets" },
-  { href: "#process", label: "Process", id: "process" },
-  { href: "#why-us", label: "Why Us", id: "why-us" },
-  { href: "#faq", label: "FAQ", id: "faq" },
+  { href: "/#services", label: "Services", id: "services" },
+  { href: "/#markets", label: "Markets", id: "markets" },
+  { href: "/#process", label: "Process", id: "process" },
+  { href: "/#why-us", label: "Why Us", id: "why-us" },
+  { href: "/#faq", label: "FAQ", id: "faq" },
 ];
 
 export function Navbar() {
@@ -93,7 +97,7 @@ export function Navbar() {
               anchor ended up taller than the logo, so centering that taller
               box parked the visible logo above the bar's true center. */}
           <Link
-            href="#top"
+            href="/#top"
             aria-label="S-Tech Solutions, back to top"
             data-cursor="link"
             className="flex items-center justify-self-start"
@@ -152,11 +156,12 @@ export function Navbar() {
               <span className="absolute inset-0 -z-10 scale-90 rounded-full bg-brand/12 opacity-0 transition-all duration-200 ease-out group-hover:scale-100 group-hover:opacity-100" />
               Client Portal
             </Link>
-            {/* Straight to email, not the #contact section: the bar's primary
-                action should start the conversation, and the section it used
-                to scroll to only holds the same mailto behind another click. */}
+            {/* Straight to the project form, not the #contact section and not
+                a blank mailto: the bar's primary action should start the
+                conversation, and a form that asks the right questions gets a
+                useful first reply where an empty compose window does not. */}
             <Button
-              href="mailto:stechsolutionsofficial@gmail.com"
+              href={START_PROJECT_PATH}
               variant="primary"
               className="hidden sm:inline-flex"
             >
@@ -212,7 +217,7 @@ export function Navbar() {
               <nav className="mt-14 flex flex-col gap-1">
                 {[
                   ...NAV_LINKS,
-                  { href: "#contact", label: "Contact", id: "contact" },
+                  { href: START_PROJECT_PATH, label: "Get in touch", id: "contact" },
                   { href: "/portal", label: "Client Portal", id: "portal" },
                 ].map(
                   (link, i) => (
@@ -244,10 +249,10 @@ export function Navbar() {
                   Bahawalpur, Pakistan
                 </p>
                 <a
-                  href="mailto:stechsolutionsofficial@gmail.com"
+                  href={`mailto:${CONTACT_EMAIL}`}
                   className="mt-2 block text-base font-medium text-brand"
                 >
-                  stechsolutionsofficial@gmail.com
+                  {CONTACT_EMAIL}
                 </a>
               </motion.div>
             </div>

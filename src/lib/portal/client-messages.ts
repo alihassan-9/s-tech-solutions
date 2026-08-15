@@ -1,3 +1,4 @@
+import { notify } from "@/lib/portal/notifications";
 import type { ClientMessage, ClientMessageType } from "@/lib/portal/types";
 
 /**
@@ -54,5 +55,19 @@ export function addClientMessage(
   const all = readAll();
   all.push(message);
   writeAll(all);
+
+  // Raised here rather than in each composer, so every place a message can be
+  // sent from acknowledges it the same way. With a backend this becomes two
+  // notifications: this receipt, and the one our reply raises.
+  notify(clientId, {
+    topic: "messages",
+    title: type === "suggestion" ? "Suggestion sent" : "Update requested",
+    body:
+      type === "suggestion"
+        ? "Thanks, we have it. We read every suggestion that comes through the portal."
+        : "We will follow up with where the work stands.",
+    href: projectId ? `/portal/projects/${projectId}` : "/portal/suggestions",
+  });
+
   return message;
 }

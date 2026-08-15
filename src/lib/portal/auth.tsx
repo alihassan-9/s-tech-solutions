@@ -48,7 +48,8 @@ function exitTarget(): string {
 }
 
 export type SignupInput = {
-  companyName: string;
+  /** Optional: see PortalClient.companyName. */
+  companyName?: string;
   contactName: string;
   email: string;
   password: string;
@@ -154,12 +155,15 @@ export function PortalAuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signup: PortalAuthContextValue["signup"] = async (input) => {
-    const companyName = input.companyName.trim();
+    // Company name is the one field that can be left blank: a solo founder or
+    // a freelancer has no company to type, and turning them away over it
+    // would be absurd.
+    const companyName = input.companyName?.trim() ?? "";
     const contactName = input.contactName.trim();
     const email = input.email.trim();
 
-    if (!companyName || !contactName || !email || !input.password.trim()) {
-      return { error: "Fill in every field." };
+    if (!contactName || !email || !input.password.trim()) {
+      return { error: "Enter your name, email, and a password." };
     }
 
     const clients = readClients();
@@ -169,7 +173,9 @@ export function PortalAuthProvider({ children }: { children: ReactNode }) {
 
     const newClient: PortalClient = {
       id: `client-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      companyName,
+      // undefined rather than "", so "has no company" is one state in
+      // storage instead of two that read differently.
+      companyName: companyName || undefined,
       contactName,
       email,
     };

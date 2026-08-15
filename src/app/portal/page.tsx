@@ -22,6 +22,7 @@ import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { Cloud } from "@/components/sky/Cloud";
 import { Reveal } from "@/components/motion/Reveal";
 import { settleSignOut, usePortalAuth } from "@/lib/portal/auth";
+import { START_PROJECT_PATH } from "@/lib/site";
 
 const inputClasses =
   "w-full rounded-xl border border-ink/10 bg-white/70 py-3 pl-10 pr-4 text-sm text-ink placeholder:text-ink-soft focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20";
@@ -253,11 +254,13 @@ export default function PortalLoginPage() {
                     className="overflow-hidden"
                   >
                     <div className="space-y-4 pb-4">
+                      {/* No `required`: plenty of clients are solo founders or
+                          freelancers, and the placeholder says so rather than
+                          leaving them guessing why the field will not pass. */}
                       <div className="relative">
                         <Building2 className={iconClasses} strokeWidth={1.75} />
                         <input
-                          required
-                          placeholder="Company name"
+                          placeholder="Company name (optional)"
                           autoComplete="organization"
                           value={companyName}
                           onChange={(e) => setCompanyName(e.target.value)}
@@ -336,6 +339,20 @@ export default function PortalLoginPage() {
               </button>
             </form>
 
+            {isSignUp ? (
+              <p className="mt-4 text-xs leading-5 text-ink-soft">
+                By creating an account you agree to our{" "}
+                <Link href="/terms" className="font-medium text-brand link-sweep">
+                  Terms and Conditions
+                </Link>{" "}
+                and{" "}
+                <Link href="/privacy" className="font-medium text-brand link-sweep">
+                  Privacy Policy
+                </Link>
+                .
+              </p>
+            ) : null}
+
             <p className="mt-6 text-xs text-ink-soft">
               {isSignUp ? "Already have an account? " : "No account yet? "}
               <button
@@ -349,7 +366,9 @@ export default function PortalLoginPage() {
             </p>
             <p className="mt-1.5 text-xs text-ink-soft">
               Prefer to talk first?{" "}
-              <Link href="/#contact" className="font-medium text-brand link-sweep">
+              {/* Straight to the project form, which emails us the brief.
+                  There is nothing behind an account you need before that. */}
+              <Link href={START_PROJECT_PATH} className="font-medium text-brand link-sweep">
                 Get in touch
               </Link>
             </p>

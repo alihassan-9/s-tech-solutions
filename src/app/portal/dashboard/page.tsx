@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import { TrendingUp, Layers, CalendarClock, ArrowUpRight } from "lucide-react";
 import { PortalShell } from "@/components/portal/PortalShell";
@@ -9,6 +10,7 @@ import { Eyebrow } from "@/components/marketing/Eyebrow";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/Reveal";
 import { useRequireClient } from "@/lib/portal/auth";
 import { getAllProjectsForClient } from "@/lib/portal/project-requests";
+import { syncDueDateReminders } from "@/lib/portal/notifications";
 
 /** How many project cards the dashboard previews before pointing to the full Projects page. */
 const HIGHLIGHT_COUNT = 3;
@@ -25,6 +27,14 @@ function formatDate(iso: string): string {
  */
 export default function PortalDashboardPage() {
   const { client, loading } = useRequireClient();
+
+  // Opening the portal is what checks for anything due. With no server to run
+  // a schedule, the visit is the trigger; the store's dedupe key keeps a
+  // second visit the same day from raising the same reminder twice.
+  useEffect(() => {
+    if (!client) return;
+    syncDueDateReminders(client.id, getAllProjectsForClient(client.id));
+  }, [client]);
 
   if (loading || !client) return null;
 

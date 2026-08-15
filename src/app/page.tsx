@@ -47,6 +47,7 @@ import { Reveal, Stagger, StaggerItem } from "@/components/motion/Reveal";
 import { AnimatedHeading } from "@/components/motion/AnimatedHeading";
 import { Marquee } from "@/components/motion/Marquee";
 import { Cloud } from "@/components/sky/Cloud";
+import { CONTACT_EMAIL, COMPANY_LOCATION, START_PROJECT_PATH } from "@/lib/site";
 
 const CAPABILITIES = [
   "B2B Lead Generation",
@@ -83,9 +84,9 @@ const ENGAGEMENT_MODES = [
 ];
 
 const OVERVIEW_FACTS = [
-  { label: "Head Office", value: "Bahawalpur, Pakistan" },
+  { label: "Head Office", value: COMPANY_LOCATION },
   { label: "Founder & CEO", value: "Muhammad Shahabaz" },
-  { label: "Primary Contact", value: "stechsolutionsofficial@gmail.com" },
+  { label: "Primary Contact", value: CONTACT_EMAIL },
   { label: "Client Focus", value: "Startups, agencies & international teams" },
 ];
 
@@ -193,8 +194,8 @@ const ENQUIRY_CHECKLIST = [
 ];
 
 const CONTACT_FACTS = [
-  { label: "Email", value: "stechsolutionsofficial@gmail.com" },
-  { label: "Location", value: "Bahawalpur, Pakistan" },
+  { label: "Email", value: CONTACT_EMAIL },
+  { label: "Location", value: COMPANY_LOCATION },
   { label: "Founder & CEO", value: "Muhammad Shahabaz" },
 ];
 
@@ -237,11 +238,14 @@ export default function Home() {
                 </p>
 
                 <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                  <Button href="#contact" variant="primary" size="lg">
+                  {/* Opens the project request form. It asks the questions we
+                      would have had to ask anyway, and it emails us the
+                      answers. */}
+                  <Button href={START_PROJECT_PATH} variant="primary" size="lg">
                     Get in touch
                     <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </Button>
-                  <Button href="#services" variant="secondary" size="lg">
+                  <Button href="/#services" variant="secondary" size="lg">
                     See our services
                   </Button>
                 </div>
@@ -897,7 +901,7 @@ export default function Home() {
                       Still have questions?
                     </p>
                     <p className="mt-2.5 text-sm leading-6 text-white/90">
-                      Email us directly and we&apos;ll help you scope the right
+                      Send us the brief and we&apos;ll help you scope the right
                       workflow.
                     </p>
 
@@ -920,19 +924,15 @@ export default function Home() {
                   </div>
 
                   <div className="relative mt-8">
-                    <Button
-                      href="mailto:stechsolutionsofficial@gmail.com"
-                      variant="invert"
-                      className="w-full"
-                    >
+                    <Button href={START_PROJECT_PATH} variant="invert" className="w-full">
                       <Mail className="h-4 w-4" strokeWidth={1.75} />
-                      Email us
+                      Send us your brief
                     </Button>
 
                     <div className="mt-5 space-y-2 border-t border-white/20 pt-5">
                       <p className="flex items-center gap-2.5 text-xs text-invert-muted">
                         <MapPin className="h-3.5 w-3.5 shrink-0 text-white" strokeWidth={2} />
-                        Bahawalpur, Pakistan
+                        {COMPANY_LOCATION}
                       </p>
                       <p className="flex items-center gap-2.5 text-xs text-invert-muted">
                         <Clock className="h-3.5 w-3.5 shrink-0 text-white" strokeWidth={2} />
@@ -985,15 +985,11 @@ export default function Home() {
                 </p>
 
                 <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                  <Button
-                    href="mailto:stechsolutionsofficial@gmail.com"
-                    variant="invert"
-                    size="lg"
-                  >
+                  <Button href={START_PROJECT_PATH} variant="invert" size="lg">
                     <Mail className="h-4 w-4" strokeWidth={1.75} />
-                    Email us
+                    Start a project
                   </Button>
-                  <Button href="#services" variant="outline-invert" size="lg">
+                  <Button href="/#services" variant="outline-invert" size="lg">
                     Review our services
                   </Button>
                 </div>

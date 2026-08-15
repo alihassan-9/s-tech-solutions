@@ -2,26 +2,34 @@ import Link from "next/link";
 import { ArrowUpRight, Mail, MapPin } from "lucide-react";
 import { Logo } from "@/components/layout/Logo";
 import { Cloud } from "@/components/sky/Cloud";
+import { CONTACT_EMAIL, COMPANY_LOCATION, START_PROJECT_PATH } from "@/lib/site";
 
+// Rooted at "/" rather than bare fragments: the footer is on every page now,
+// including ones that hold none of these sections.
 const COLUMNS: { heading: string; links: { href: string; label: string }[] }[] = [
   {
     heading: "Services",
     links: [
-      { href: "#lead-generation", label: "Lead Generation & Prospect Research" },
-      { href: "#crm-management", label: "CRM Management & Data Operations" },
-      { href: "#email-marketing", label: "Email Marketing Support" },
+      { href: "/#lead-generation", label: "Lead Generation & Prospect Research" },
+      { href: "/#crm-management", label: "CRM Management & Data Operations" },
+      { href: "/#email-marketing", label: "Email Marketing Support" },
     ],
   },
   {
     heading: "Company",
     links: [
-      { href: "#about", label: "About" },
-      { href: "#markets", label: "Markets" },
-      { href: "#process", label: "Process" },
-      { href: "#why-us", label: "Why Us" },
-      { href: "#team", label: "Team" },
+      { href: "/#about", label: "About" },
+      { href: "/#markets", label: "Markets" },
+      { href: "/#process", label: "Process" },
+      { href: "/#why-us", label: "Why Us" },
+      { href: "/#team", label: "Team" },
     ],
   },
+];
+
+const LEGAL_LINKS = [
+  { href: "/privacy", label: "Privacy Policy" },
+  { href: "/terms", label: "Terms and Conditions" },
 ];
 
 export function Footer() {
@@ -41,7 +49,7 @@ export function Footer() {
       <div className="relative mx-auto max-w-6xl px-6">
         <div className="flex flex-col justify-between gap-14 pb-16 lg:flex-row">
           <div className="max-w-sm">
-            <Link href="#top" data-cursor="link">
+            <Link href="/#top" data-cursor="link">
               <Logo invert compact />
             </Link>
             <p className="mt-5 text-sm leading-6 text-invert-muted">
@@ -51,16 +59,16 @@ export function Footer() {
 
             <div className="mt-7 space-y-2.5">
               <a
-                href="mailto:stechsolutionsofficial@gmail.com"
+                href={`mailto:${CONTACT_EMAIL}`}
                 data-cursor="link"
                 className="group flex items-center gap-2.5 text-sm text-invert-muted transition-colors hover:text-invert"
               >
                 <Mail className="h-4 w-4 shrink-0 text-brand-light" strokeWidth={1.75} />
-                <span className="link-sweep break-all">stechsolutionsofficial@gmail.com</span>
+                <span className="link-sweep break-all">{CONTACT_EMAIL}</span>
               </a>
               <p className="flex items-center gap-2.5 text-sm text-invert-muted">
                 <MapPin className="h-4 w-4 shrink-0 text-brand-light" strokeWidth={1.75} />
-                Bahawalpur, Pakistan
+                {COMPANY_LOCATION}
               </p>
             </div>
           </div>
@@ -92,7 +100,7 @@ export function Footer() {
                 Start a project
               </p>
               <Link
-                href="#contact"
+                href={START_PROJECT_PATH}
                 data-cursor="link"
                 className="group mt-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-medium text-invert backdrop-blur-md transition-colors hover:bg-white/12"
               >
@@ -106,9 +114,22 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 border-t border-white/10 py-7 text-xs text-invert-muted sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 border-t border-white/10 py-7 text-xs text-invert-muted lg:flex-row lg:items-center lg:justify-between">
           <p>© {new Date().getFullYear()} S-Tech Solutions. All rights reserved.</p>
-          <p>Muhammad Shahabaz · Founder &amp; CEO</p>
+
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            {LEGAL_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                data-cursor="link"
+                className="link-sweep transition-colors hover:text-invert"
+              >
+                {link.label}
+              </Link>
+            ))}
+            <p>Muhammad Shahabaz · Founder &amp; CEO</p>
+          </div>
         </div>
       </div>
 
