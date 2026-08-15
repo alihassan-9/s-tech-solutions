@@ -14,6 +14,7 @@ import { useRequireClient } from "@/lib/portal/auth";
 import { getTasksForProject, getDeliverablesForProject, getUpdatesForProject } from "@/lib/portal/project-details";
 import { getAnyProjectById } from "@/lib/portal/project-requests";
 import { getClientMessages } from "@/lib/portal/client-messages";
+import { serviceCopyFor } from "@/lib/portal/service-copy";
 import type { ClientMessage } from "@/lib/portal/types";
 
 function formatDate(iso: string): string {
@@ -31,6 +32,7 @@ export default function PortalProjectPage() {
   const params = useParams<{ id: string }>();
 
   const project = client ? getAnyProjectById(client.id, params.id) ?? null : null;
+  const briefCopy = serviceCopyFor(project?.service ?? "");
 
   const [messages, setMessages] = useState<ClientMessage[]>([]);
 
@@ -140,15 +142,18 @@ export default function PortalProjectPage() {
                 <h2 className="text-base font-semibold tracking-tight text-ink">Project brief</h2>
               </div>
               <div className="mt-5 grid gap-5 sm:grid-cols-2">
+                {/* Labelled the way the request form labelled them for this
+                    service: "Target market" is meaningless above the answer
+                    to "which CRM and which records". */}
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-soft">
-                    Target market
+                    {briefCopy.scopeLabel}
                   </p>
                   <p className="mt-1.5 text-sm leading-6 text-ink">{project.brief.targetMarket}</p>
                 </div>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-soft">
-                    Fields
+                    {briefCopy.detailLabel}
                   </p>
                   <p className="mt-1.5 text-sm leading-6 text-ink">{project.brief.requiredFields}</p>
                 </div>

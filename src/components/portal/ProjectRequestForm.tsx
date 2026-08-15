@@ -9,6 +9,7 @@ import {
   openMailClient,
   type ProjectRequestEmail,
 } from "@/lib/portal/project-email";
+import { SERVICE_COPY } from "@/lib/portal/service-copy";
 import {
   SERVICE_OPTIONS,
   type NewProjectRequestInput,
@@ -72,6 +73,11 @@ export function ProjectRequestForm({
   const [who, setWho] = useState<ProjectRequestContact>(EMPTY_CONTACT);
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState<ProjectRequestEmail | null>(null);
+
+  // Labels and examples follow whichever service is selected. Only the copy
+  // changes: anything already typed stays exactly where it is, so switching
+  // service to compare the questions costs nothing.
+  const copy = SERVICE_COPY[form.service];
 
   const set = <K extends keyof NewProjectRequestInput>(key: K, value: NewProjectRequestInput[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -210,7 +216,7 @@ export function ProjectRequestForm({
           <label className={labelClasses}>Project name</label>
           <input
             required
-            placeholder="e.g. Q4 SaaS Vertical Prospecting"
+            placeholder={copy.namePlaceholder}
             value={form.name}
             onChange={(e) => set("name", e.target.value)}
             className={`mt-2 ${fieldClasses}`}
@@ -239,11 +245,11 @@ export function ProjectRequestForm({
         </div>
 
         <div>
-          <label className={labelClasses}>Target market or industry</label>
+          <label className={labelClasses}>{copy.scopeLabel}</label>
           <textarea
             required
             rows={2}
-            placeholder="Who should this cover? Industry, company size, region, role."
+            placeholder={copy.scopePlaceholder}
             value={form.targetMarket}
             onChange={(e) => set("targetMarket", e.target.value)}
             className={`mt-2 resize-none ${fieldClasses}`}
@@ -251,11 +257,11 @@ export function ProjectRequestForm({
         </div>
 
         <div>
-          <label className={labelClasses}>Fields you need</label>
+          <label className={labelClasses}>{copy.detailLabel}</label>
           <textarea
             required
             rows={2}
-            placeholder="e.g. company, contact name, title, work email, LinkedIn URL"
+            placeholder={copy.detailPlaceholder}
             value={form.requiredFields}
             onChange={(e) => set("requiredFields", e.target.value)}
             className={`mt-2 resize-none ${fieldClasses}`}
@@ -267,7 +273,7 @@ export function ProjectRequestForm({
             <label className={labelClasses}>Approximate volume</label>
             <input
               required
-              placeholder="e.g. 500 records"
+              placeholder={copy.volumePlaceholder}
               value={form.volume}
               onChange={(e) => set("volume", e.target.value)}
               className={`mt-2 ${fieldClasses}`}
@@ -277,7 +283,7 @@ export function ProjectRequestForm({
             <label className={labelClasses}>Preferred format</label>
             <input
               required
-              placeholder="e.g. XLSX, CSV, CRM import"
+              placeholder={copy.formatPlaceholder}
               value={form.format}
               onChange={(e) => set("format", e.target.value)}
               className={`mt-2 ${fieldClasses}`}
@@ -299,7 +305,7 @@ export function ProjectRequestForm({
           <label className={labelClasses}>Anything else to add</label>
           <textarea
             rows={3}
-            placeholder="Context, exclusions, priorities, anything that helps scope it right."
+            placeholder={copy.notesPlaceholder}
             value={form.notes}
             onChange={(e) => set("notes", e.target.value)}
             className={`mt-2 resize-none ${fieldClasses}`}

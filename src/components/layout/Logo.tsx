@@ -6,18 +6,15 @@ import Image from "next/image";
  * square with its own blue fill already baked in, so it needs no background
  * of its own here, just rounded corners to match the rest of the UI.
  *
- * `compact` shows the short wordmark ("S-Tech."), used only by the footer's
- * own brand mark since its copyright line already spells out the full name
- * right below it. Every other instance (navbar, portal header, login page)
- * defaults to the full "S-Tech Solutions."
+ * Always the full wordmark. The footer used to shorten it to "S-Tech." on
+ * the grounds that its copyright line spelled the name out anyway, but the
+ * brand mark is the one place the full name earns its space.
  */
 export function Logo({
   invert = false,
-  compact = false,
   className = "",
 }: {
   invert?: boolean;
-  compact?: boolean;
   className?: string;
 }) {
   return (
@@ -34,7 +31,7 @@ export function Logo({
           invert ? "text-invert" : "text-ink"
         }`}
       >
-        {compact ? "S-Tech" : "S-Tech Solutions"}
+        S-Tech Solutions
         <span className="text-brand-light">.</span>
       </span>
     </span>

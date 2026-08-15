@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   ShieldCheck,
   UserCheck,
@@ -464,8 +465,14 @@ export default function Home() {
               <StaggerItem className="sm:col-span-2 lg:col-span-4">
                 <GlassCard className="flex h-full flex-col items-start justify-between gap-6 rounded-3xl p-7 sm:flex-row sm:items-center">
                   <div className="flex items-center gap-4">
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-light to-brand text-base font-semibold text-white shadow-brand">
-                      MS
+                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl shadow-brand">
+                      <Image
+                        src="/muhammad-shahabaz.jpg"
+                        alt="Muhammad Shahabaz"
+                        fill
+                        sizes="56px"
+                        className="object-cover object-top"
+                      />
                     </div>
                     <div>
                       <p className="text-base font-semibold tracking-tight text-ink">
@@ -820,26 +827,36 @@ export default function Home() {
               />
             </div>
 
-            <div className="mt-14 grid gap-4 lg:grid-cols-[1fr_1.1fr]">
+            {/* The portrait column is narrower than the list beside it: the
+                photo is a 4:5 frame, so its height is decided by its width,
+                and a wider column would tower over the team card. */}
+            <div className="mt-14 grid gap-4 lg:grid-cols-[0.7fr_1.3fr]">
               <Reveal>
-                <GlassCard className="relative h-full overflow-hidden rounded-3xl p-8" tilt>
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-brand/10 blur-3xl"
-                  />
-                  <div className="relative flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-brand-light to-brand-deep text-xl font-semibold text-white shadow-brand">
-                    MS
+                <GlassCard className="relative h-full overflow-hidden rounded-3xl" tilt>
+                  <div className="relative h-full min-h-[26rem] w-full">
+                    <Image
+                      src="/muhammad-shahabaz.jpg"
+                      alt="Muhammad Shahabaz, Founder and CEO of S-Tech Solutions"
+                      fill
+                      sizes="(min-width: 1024px) 26rem, 100vw"
+                      className="object-cover object-top"
+                    />
+
+                    {/* Reading the name off a photograph needs a floor under
+                        the text, not a tint over the whole image. */}
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink via-ink/75 to-transparent px-7 pb-7 pt-20">
+                      <h3 className="text-xl font-semibold tracking-tight text-white">
+                        Muhammad Shahabaz
+                      </h3>
+                      <p className="mt-1 text-sm font-medium text-white">
+                        Founder &amp; CEO
+                      </p>
+                      <p className="mt-3 text-sm leading-6 text-white/85">
+                        Company direction, service quality, client relationships, and
+                        team coordination.
+                      </p>
+                    </div>
                   </div>
-                  <h3 className="relative mt-7 text-xl font-semibold tracking-tight text-ink">
-                    Muhammad Shahabaz
-                  </h3>
-                  <p className="relative mt-1 text-sm font-medium text-brand">
-                    Founder &amp; CEO
-                  </p>
-                  <p className="relative mt-4 text-sm leading-6 text-ink-muted">
-                    Company direction, service quality, client relationships, and
-                    team coordination.
-                  </p>
                 </GlassCard>
               </Reveal>
 

@@ -25,11 +25,13 @@ const COLUMNS: { heading: string; links: { href: string; label: string }[] }[] =
       { href: "/#team", label: "Team" },
     ],
   },
-];
-
-const LEGAL_LINKS = [
-  { href: "/privacy", label: "Privacy Policy" },
-  { href: "/terms", label: "Terms and Conditions" },
+  {
+    heading: "Policies",
+    links: [
+      { href: "/privacy", label: "Privacy Policy" },
+      { href: "/terms", label: "Terms and Conditions" },
+    ],
+  },
 ];
 
 export function Footer() {
@@ -50,7 +52,7 @@ export function Footer() {
         <div className="flex flex-col justify-between gap-14 pb-16 lg:flex-row">
           <div className="max-w-sm">
             <Link href="/#top" data-cursor="link">
-              <Logo invert compact />
+              <Logo invert />
             </Link>
             <p className="mt-5 text-sm leading-6 text-invert-muted">
               Lead generation, data research &amp; verification, CRM management, and
@@ -73,7 +75,9 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-10 sm:grid-cols-3">
+          {/* Four blocks now that policies have their own column: two up on a
+              tablet, all four across once there is room. */}
+          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
             {COLUMNS.map((col) => (
               <div key={col.heading}>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-invert/75">
@@ -114,22 +118,11 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 border-t border-white/10 py-7 text-xs text-invert-muted lg:flex-row lg:items-center lg:justify-between">
+        {/* The policy links moved up into their own column, so this goes back
+            to being just the credit line. */}
+        <div className="flex flex-col gap-4 border-t border-white/10 py-7 text-xs text-invert-muted sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} S-Tech Solutions. All rights reserved.</p>
-
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-            {LEGAL_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                data-cursor="link"
-                className="link-sweep transition-colors hover:text-invert"
-              >
-                {link.label}
-              </Link>
-            ))}
-            <p>Muhammad Shahabaz · Founder &amp; CEO</p>
-          </div>
+          <p>Muhammad Shahabaz · Founder &amp; CEO</p>
         </div>
       </div>
 

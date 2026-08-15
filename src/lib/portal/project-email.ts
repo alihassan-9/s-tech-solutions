@@ -1,4 +1,5 @@
 import { CONTACT_EMAIL } from "@/lib/site";
+import { SERVICE_COPY } from "@/lib/portal/service-copy";
 import type { NewProjectRequestInput, ProjectRequestContact } from "@/lib/portal/types";
 
 /**
@@ -37,6 +38,10 @@ export function buildProjectRequestEmail(
 ): ProjectRequestEmail {
   const subject = `New project request: ${input.name.trim() || input.service}`;
 
+  // The two questions the form rewords per service are labelled here the way
+  // the sender saw them, so the brief we read back matches what was asked.
+  const copy = SERVICE_COPY[input.service];
+
   const parts: (string | null)[] = [
     "New project request from the S-Tech website.",
     "",
@@ -51,8 +56,8 @@ export function buildProjectRequestEmail(
     line("Requested date", input.desiredDueDate) ?? "Requested date: flexible",
     "",
     "BRIEF",
-    line("Target market or industry", input.targetMarket),
-    line("Fields needed", input.requiredFields),
+    line(copy.scopeLabel, input.targetMarket),
+    line(copy.detailLabel, input.requiredFields),
     line("Approximate volume", input.volume),
     line("Preferred format", input.format),
     line("Anything else", input.notes),
