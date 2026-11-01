@@ -1,4 +1,18 @@
+<div align="center">
+
 # S-Tech Solutions
+
+**Marketing website and client portal for a business-services company specialising in lead generation, data research, CRM management and email marketing.**
+
+![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?logo=supabase&logoColor=white)
+
+</div>
+
+---
 
 Marketing site and client portal for S-Tech Solutions, a Bahawalpur-based
 business services company working in lead generation, data research and
@@ -100,3 +114,7 @@ they need revisiting when the backend lands.
 ## Deploying
 
 Pushing to `master` deploys to production on Vercel.
+
+## Author
+
+Built by **Ali Hassan** · [LinkedIn](https://www.linkedin.com/in/ali-hassan-70bb9323b) · [GitHub](https://github.com/alihassan-9)
